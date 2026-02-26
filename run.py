@@ -106,11 +106,11 @@ class environment:
 def simulate(total_episodes):
 
     # Init metrics
-    # reward_matrix = dict()
+    # Init value tracking
     q_table_values = dict()
-    q_table_values["Y1"] = []
-    q_table_values["X1"] = []
-    q_table_values["X3"] = []
+    q_table_values["Y1"] = [{1: 0.0, 2: 0.0}]
+    q_table_values["X1"] = [{1: 0.0, 2: 0.0}]
+    q_table_values["X3"] = [{1: 0.0, 2: 0.0}]
 
     agent_types = {
         "X1": "X", "X2": "X", "X3": "X", "X4": "X", "X5": "X",
@@ -138,16 +138,12 @@ def simulate(total_episodes):
         for name, agent in agents.items():
             current_actions[name] = agent.action()
 
-        # Accmulate metrics
-        # rewards = env.step(current_actions)
-        q_table_values["Y1"].append(agents["Y1"].q_table)
-        q_table_values["X1"].append(agents["X1"].q_table)
-        q_table_values["X3"].append(agents["X3"].q_table)
-
-        # Calculate metrics
-
-
         # Update agent strategies
+
+        # Accmulate value metrics
+        q_table_values["Y1"].append(dict(agents["Y1"].q_table))
+        q_table_values["X1"].append(dict(agents["X1"].q_table))
+        q_table_values["X3"].append(dict(agents["X3"].q_table))
 
 
 if __name__ == "__main__":
