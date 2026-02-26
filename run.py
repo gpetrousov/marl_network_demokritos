@@ -34,11 +34,6 @@ class QLearningAgent():
         max_next_q = max(self.q_table.values())
         self.q_table[action] += self.alpha * (reward + (self.gamma * max_next_q) - self.q_table[action])
 
-        # How each action change the value in the table
-        for act in self.action_space:
-            self.action_value_history[act].append(self.q_table[act])
-
-
 
 class environment:
     def __init__(self):
@@ -76,7 +71,7 @@ class environment:
         action_matrix = {agent_name: agent_action}
         """
 
-        # rewards = {name: 0 for name in self.graph.keys()}
+        rewards = {name: 0 for name in self.graph.keys()}
 
         # Traverse each agent in the graph
         for each_agent in self.graph.keys():
