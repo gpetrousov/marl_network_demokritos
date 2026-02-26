@@ -134,11 +134,15 @@ def simulate(total_episodes):
         current_actions = {}
 
         # Register actions
-        # Phase A: All agents choose actions simultaneously
         for name, agent in agents.items():
             current_actions[name] = agent.action()
 
+        # Step the environment
+        rewards = env.step(current_actions)
+
         # Update agent strategies
+        for each_agent in rewards.keys():
+            agents[each_agent].update_q_values(current_actions[each_agent], rewards[each_agent])
 
         # Accmulate value metrics
         q_table_values["Y1"].append(dict(agents["Y1"].q_table))
