@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 class QLearningAgent():
-    def __init__(self, agent_name, agent_type, actions=[1, 2], epsilon_init=1.0, epsilon_threshold=0.0, epsilon_decay=0.01, alpha=0.1, gamma=0.95):
+    def __init__(self, agent_name, agent_type, actions=[1, 2], epsilon_init=1.0, epsilon_threshold=0.0, epsilon_decay=0.01, alpha=0.01, gamma=0.95):
 
         self.name = agent_name
         self.type = agent_type # "X" or "Y"
