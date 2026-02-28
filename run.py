@@ -29,7 +29,7 @@ class QLearningAgent():
             chosen_action = np.random.choice(self.action_space)
         else:
             max_val = max(self.q_table.values())
-            best_action = [a+1 for a, v in enumerate(self.q_table.values()) if v == max_val]
+            best_action = [a for a, v in self.q_table.items() if v == max_val]
             chosen_action = np.random.choice(best_action)
 
         if episode % 40 == 0:
