@@ -1,5 +1,7 @@
 # Q-learning with e-greedy
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 class QLearningAgent():
     def __init__(self, agent_name, agent_type, actions=[1, 2], epsilon_init=1.0, alpha=0.1, gamma=0.95):
@@ -149,7 +151,33 @@ def simulate(total_episodes):
         q_table_values["X1"].append(dict(agents["X1"].q_table))
         q_table_values["X3"].append(dict(agents["X3"].q_table))
 
+    # Plot q-values for Y1,X1,X3
+    # For each agent, we need 2 datapoints for the actions
+
+    # Y1
+    y1_action1_values = [entry[1] for entry in q_table_values["Y1"]]
+    y1_action2_values = [entry[2] for entry in q_table_values["Y1"]]
+    plt.plot(range(len(y1_action1_values)), y1_action1_values, label="Y1 Action1", linestyle="solid")
+    plt.plot(range(len(y1_action2_values)), y1_action2_values, label="Y1 Action2", linestyle="dotted")
+
+    #X1
+    x1_action1_values = [entry[1] for entry in q_table_values["X1"]]
+    x1_action2_values = [entry[2] for entry in q_table_values["X1"]]
+    plt.plot(range(len(x1_action1_values)), x1_action1_values, label="X1 Action1", linestyle="dashed")
+    plt.plot(range(len(y1_action2_values)), x1_action2_values, label="X1 Action2", linestyle="dashdot")
+
+    #X3
+    x3_action1_values = [entry[1] for entry in q_table_values["X3"]]
+    x3_action2_values = [entry[2] for entry in q_table_values["X3"]]
+    plt.plot(range(len(x3_action1_values)), x3_action1_values, label="X3 Action1")
+    plt.plot(range(len(x3_action2_values)), x3_action2_values, label="X3 Action2", linestyle="-")
+
+    plt.legend()
+    plt.xlabel("Rounds")
+    plt.ylabel("Q-values")
+    plt.title("Agent action values")
+    plt.show()
+
 
 if __name__ == "__main__":
     simulate(1000)
-
