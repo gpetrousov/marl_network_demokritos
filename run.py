@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 class QLearningAgent():
-    def __init__(self, agent_name, agent_type, actions=[1, 2], epsilon_init=1.0, alpha=0.1, gamma=0.95):
+    def __init__(self, agent_name, agent_type, actions=[1, 2], epsilon_init=1.0, epsilon_threshold=0.0, epsilon_decay=0.01, alpha=0.1, gamma=0.95):
 
         self.name = agent_name
         self.type = agent_type # "X" or "Y"
@@ -15,6 +15,8 @@ class QLearningAgent():
 
         # Hyperparams
         self.epsilon = epsilon_init
+        self.epsilon_threshold = epsilon_threshold
+        self.epsilon_decay = epsilon_decay
         self.alpha = alpha
         self.gamma = gamma
 
@@ -27,9 +29,15 @@ class QLearningAgent():
             chosen_action = np.random.choice(self.action_space)
         else:
             max_val = max(self.q_table.values())
-            best_action = [a for a, v in enumerate(self.q_table.items()) if v == max_val]
+            best_action = [a+1 for a, v in enumerate(self.q_table.values()) if v == max_val]
             chosen_action = np.random.choice(best_action)
+
+        self.decay_epsilon()
         return chosen_action
+
+    def decay_epsilon(self):
+        if self.epsilon > self.epsilon_threshold:
+            self.epsilon -= self.epsilon_decay
 
     def update_q_values(self, action, reward):
         # Standard Q-learning update: Q(a) = Q(a) + alpha * (reward + gamma * max(Q) - Q(a))
