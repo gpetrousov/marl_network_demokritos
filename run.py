@@ -169,25 +169,45 @@ def simulate(total_episodes):
     # Y1
     y1_action1_values = [entry[1] for entry in q_table_values["Y1"]]
     y1_action2_values = [entry[2] for entry in q_table_values["Y1"]]
-    plt.plot(range(len(y1_action1_values)), y1_action1_values, label="Y1 Action1", linestyle="solid")
-    plt.plot(range(len(y1_action2_values)), y1_action2_values, label="Y1 Action2", linestyle="dotted")
+    # plt.plot(range(len(y1_action1_values)), y1_action1_values, label="Y1 Action1", linestyle="solid")
+    # plt.plot(range(len(y1_action2_values)), y1_action2_values, label="Y1 Action2", linestyle="dotted")
 
     #X1
     x1_action1_values = [entry[1] for entry in q_table_values["X1"]]
     x1_action2_values = [entry[2] for entry in q_table_values["X1"]]
-    plt.plot(range(len(x1_action1_values)), x1_action1_values, label="X1 Action1", linestyle="dashed")
-    plt.plot(range(len(y1_action2_values)), x1_action2_values, label="X1 Action2", linestyle="dashdot")
+    # plt.plot(range(len(x1_action1_values)), x1_action1_values, label="X1 Action1", linestyle="dashed")
+    # plt.plot(range(len(y1_action2_values)), x1_action2_values, label="X1 Action2", linestyle="dashdot")
 
     #X3
     x3_action1_values = [entry[1] for entry in q_table_values["X3"]]
     x3_action2_values = [entry[2] for entry in q_table_values["X3"]]
-    plt.plot(range(len(x3_action1_values)), x3_action1_values, label="X3 Action1")
-    plt.plot(range(len(x3_action2_values)), x3_action2_values, label="X3 Action2", linestyle="-")
+    # plt.plot(range(len(x3_action1_values)), x3_action1_values, label="X3 Action1")
+    # plt.plot(range(len(x3_action2_values)), x3_action2_values, label="X3 Action2", linestyle="-")
 
-    plt.legend()
-    plt.xlabel("Rounds")
-    plt.ylabel("Q-values")
-    plt.title("Agent action values")
+    # Plotting
+    fig, axs = plt.subplots(3, 1, sharex=True)
+    axs[0].plot(range(len(y1_action1_values)), y1_action1_values, label="Y1 Action1", linestyle="solid")
+    axs[0].plot(range(len(y1_action2_values)), y1_action2_values, label="Y1 Action2", linestyle="dotted")
+    # axs[0].set(xlabel="Episode")
+    axs[0].legend(loc='best')
+    axs[0].set(ylabel="Q-Values")
+    axs[0].set_title("Y1 Action values")
+
+    axs[1].plot(range(len(x1_action1_values)), x1_action1_values, label="X1 Action1", linestyle="dashed")
+    axs[1].plot(range(len(y1_action2_values)), x1_action2_values, label="X1 Action2", linestyle="dashdot")
+    # axs[1].set(xlabel="Episode")
+    axs[1].legend(loc='best')
+    axs[1].set(ylabel="Q-Values")
+    axs[1].set_title("X1 Action values")
+
+    axs[2].plot(range(len(x3_action1_values)), x3_action1_values, label="X3 Action1")
+    axs[2].plot(range(len(x3_action2_values)), x3_action2_values, label="X3 Action2", linestyle="-")
+    axs[2].set(xlabel="Episode")
+    axs[2].legend(loc='best')
+    axs[2].set(ylabel="Q-Values")
+    axs[2].set_title("X3 Action values")
+
+    # plt.tight_layout()
     plt.show()
 
 
