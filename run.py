@@ -24,7 +24,7 @@ class QLearningAgent():
         self.reward_history = []
         self.action_value_history = {1: [], 2: []}
 
-    def action(self, episode):
+    def action(self):
         if np.random.rand() < self.epsilon:
             chosen_action = np.random.choice(self.action_space)
         else:
@@ -32,8 +32,6 @@ class QLearningAgent():
             best_action = [a for a, v in self.q_table.items() if v == max_val]
             chosen_action = np.random.choice(best_action)
 
-        if episode % 40 == 0:
-            self.decay_epsilon()
         return chosen_action
 
     def decay_epsilon(self):
@@ -146,7 +144,7 @@ def simulate(total_episodes):
 
         # Register actions
         for name, agent in agents.items():
-            current_actions[name] = agent.action(episode)
+            current_actions[name] = agent.action()
 
         # Step the environment
         rewards = env.step(current_actions)
@@ -154,6 +152,11 @@ def simulate(total_episodes):
         # Update agent strategies
         for each_agent in rewards.keys():
             agents[each_agent].update_q_values(current_actions[each_agent], rewards[each_agent])
+
+        # Decay epsilon
+        if (episode > 0) and (episode % 40 == 0):
+            for agent in agents.values():
+                agent.decay_epsilon()
 
         # Accmulate value metrics
         q_table_values["Y1"].append(dict(agents["Y1"].q_table))
@@ -189,4 +192,4 @@ def simulate(total_episodes):
 
 
 if __name__ == "__main__":
-    simulate(1000)
+    simulate(5000)
