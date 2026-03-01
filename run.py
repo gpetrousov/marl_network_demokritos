@@ -120,6 +120,7 @@ def simulate(total_episodes):
     q_table_values["Y1"] = [{1: 0.0, 2: 0.0}]
     q_table_values["X1"] = [{1: 0.0, 2: 0.0}]
     q_table_values["X3"] = [{1: 0.0, 2: 0.0}]
+    mean_history_rewards = {"X": [], "Y": []}
 
     agent_types = {
         "X1": "X", "X2": "X", "X3": "X", "X4": "X", "X5": "X",
@@ -148,6 +149,12 @@ def simulate(total_episodes):
 
         # Step the environment
         rewards = env.step(current_actions)
+
+        # Calc rewards
+        # episode_X_rewards = [rewards[agent] for agent in rewards if "X" in agent]
+        # episode_Y_rewards = [rewards[agent] for agent in rewards if "Y" in agent]
+        # mean_history_rewards["X"].append(np.mean(episode_X_rewards))
+        # mean_history_rewards["Y"].append(np.mean(episode_Y_rewards))
 
         # Update agent strategies
         for each_agent in rewards.keys():
@@ -207,8 +214,14 @@ def simulate(total_episodes):
     axs[2].set(ylabel="Q-Values")
     axs[2].set_title("X3 Action values")
 
-    # plt.tight_layout()
     plt.show()
+
+    # print(mean_history_rewards)
+    # plt.plot(range(len(mean_history_rewards["Y"])), mean_history_rewards["Y"])
+    # plt.show()
+
+    # Plot mean rewards to the 2 agent types
+
 
 
 if __name__ == "__main__":
