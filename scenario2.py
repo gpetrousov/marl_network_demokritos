@@ -254,20 +254,20 @@ def simulate(total_episodes):
 
     #
     # # Plotting - mean rewards for 2 agent types
-    # fig2, (ax_y, ax_x) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
-    #
-    # ax_y.plot(mean_history_rewards["Y"], color="blue", label="Type Y")
-    # ax_y.set_title("Mean Rewards - Agent Type Y")
-    # ax_y.set_ylabel("Reward")
-    #
-    # ax_x.plot(mean_history_rewards["X"], color="red", label="Type X")
-    # ax_x.set_title("Mean Rewards - Agent Type X")
-    # ax_x.set_ylabel("Reward")
-    # ax_x.set_xlabel("Episode")
-    #
-    # plt.tight_layout()
-    # plt.savefig("scenario1_average_rewards.png")
-    # plt.close(fig2)
+    fig2, (ax_y, ax_x) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+
+    ax_y.plot(mean_history_rewards["Y"], color="blue", label="Type Y")
+    ax_y.set_title("Mean Rewards - Agent Type Y")
+    ax_y.set_ylabel("Reward")
+
+    ax_x.plot(mean_history_rewards["X"], color="red", label="Type X")
+    ax_x.set_title("Mean Rewards - Agent Type X")
+    ax_x.set_ylabel("Reward")
+    ax_x.set_xlabel("Episode")
+
+    plt.tight_layout()
+    plt.savefig("scenario2_average_rewards.png")
+    plt.close(fig2)
 
 
 if __name__ == "__main__":
