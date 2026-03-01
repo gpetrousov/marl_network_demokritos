@@ -192,7 +192,7 @@ def simulate(total_episodes):
     # plt.plot(range(len(x3_action2_values)), x3_action2_values, label="X3 Action2", linestyle="-")
 
     # Plotting - action values
-    fig1, axs1 = plt.subplots(3, 1, sharex=True)
+    fig1, axs1 = plt.subplots(3, 1, figsize=(10, 12), sharex=True)
     axs1[0].plot(range(len(y1_action1_values)), y1_action1_values, label="Y1 Action1", linestyle="solid")
     axs1[0].plot(range(len(y1_action2_values)), y1_action2_values, label="Y1 Action2", linestyle="dotted")
     # axs[0].set(xlabel="Episode")
@@ -218,7 +218,7 @@ def simulate(total_episodes):
     plt.close(fig1)
 
     # Plotting - mean rewards for 2 agent types
-    fig2, (ax_y, ax_x) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+    fig2, (ax_y, ax_x) = plt.subplots(2, 1, figsize=(10, 12), sharex=True)
 
     ax_y.plot(mean_history_rewards["Y"], color="blue", label="Type Y")
     ax_y.set_title("Mean Rewards - Agent Type Y")
