@@ -151,10 +151,10 @@ def simulate(total_episodes):
         rewards = env.step(current_actions)
 
         # Calc rewards
-        # episode_X_rewards = [rewards[agent] for agent in rewards if "X" in agent]
-        # episode_Y_rewards = [rewards[agent] for agent in rewards if "Y" in agent]
-        # mean_history_rewards["X"].append(np.mean(episode_X_rewards))
-        # mean_history_rewards["Y"].append(np.mean(episode_Y_rewards))
+        episode_X_rewards = [rewards[agent] for agent in rewards if "X" in agent]
+        episode_Y_rewards = [rewards[agent] for agent in rewards if "Y" in agent]
+        mean_history_rewards["X"].append(np.mean(episode_X_rewards))
+        mean_history_rewards["Y"].append(np.mean(episode_Y_rewards))
 
         # Update agent strategies
         for each_agent in rewards.keys():
@@ -191,37 +191,47 @@ def simulate(total_episodes):
     # plt.plot(range(len(x3_action1_values)), x3_action1_values, label="X3 Action1")
     # plt.plot(range(len(x3_action2_values)), x3_action2_values, label="X3 Action2", linestyle="-")
 
-    # Plotting
-    fig, axs = plt.subplots(3, 1, sharex=True)
-    axs[0].plot(range(len(y1_action1_values)), y1_action1_values, label="Y1 Action1", linestyle="solid")
-    axs[0].plot(range(len(y1_action2_values)), y1_action2_values, label="Y1 Action2", linestyle="dotted")
+    # Plotting - action values
+    fig1, axs1 = plt.subplots(3, 1, sharex=True)
+    axs1[0].plot(range(len(y1_action1_values)), y1_action1_values, label="Y1 Action1", linestyle="solid")
+    axs1[0].plot(range(len(y1_action2_values)), y1_action2_values, label="Y1 Action2", linestyle="dotted")
     # axs[0].set(xlabel="Episode")
-    axs[0].legend(loc='best')
-    axs[0].set(ylabel="Q-Values")
-    axs[0].set_title("Y1 Action values")
+    axs1[0].legend(loc='best')
+    axs1[0].set(ylabel="Q-Values")
+    axs1[0].set_title("Y1 Action values")
 
-    axs[1].plot(range(len(x1_action1_values)), x1_action1_values, label="X1 Action1", linestyle="dashed")
-    axs[1].plot(range(len(y1_action2_values)), x1_action2_values, label="X1 Action2", linestyle="dashdot")
+    axs1[1].plot(range(len(x1_action1_values)), x1_action1_values, label="X1 Action1", linestyle="dashed")
+    axs1[1].plot(range(len(y1_action2_values)), x1_action2_values, label="X1 Action2", linestyle="dashdot")
     # axs[1].set(xlabel="Episode")
-    axs[1].legend(loc='best')
-    axs[1].set(ylabel="Q-Values")
-    axs[1].set_title("X1 Action values")
+    axs1[1].legend(loc='best')
+    axs1[1].set(ylabel="Q-Values")
+    axs1[1].set_title("X1 Action values")
 
-    axs[2].plot(range(len(x3_action1_values)), x3_action1_values, label="X3 Action1")
-    axs[2].plot(range(len(x3_action2_values)), x3_action2_values, label="X3 Action2", linestyle="-")
-    axs[2].set(xlabel="Episode")
-    axs[2].legend(loc='best')
-    axs[2].set(ylabel="Q-Values")
-    axs[2].set_title("X3 Action values")
+    axs1[2].plot(range(len(x3_action1_values)), x3_action1_values, label="X3 Action1")
+    axs1[2].plot(range(len(x3_action2_values)), x3_action2_values, label="X3 Action2", linestyle="-")
+    axs1[2].set(xlabel="Episode")
+    axs1[2].legend(loc='best')
+    axs1[2].set(ylabel="Q-Values")
+    axs1[2].set_title("X3 Action values")
 
-    plt.show()
+    plt.savefig("scenario1_action_values.png")
+    plt.close(fig1)
 
-    # print(mean_history_rewards)
-    # plt.plot(range(len(mean_history_rewards["Y"])), mean_history_rewards["Y"])
-    # plt.show()
+    # Plotting - mean rewards for 2 agent types
+    fig2, (ax_y, ax_x) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
 
-    # Plot mean rewards to the 2 agent types
+    ax_y.plot(mean_history_rewards["Y"], color="blue", label="Type Y")
+    ax_y.set_title("Mean Rewards - Agent Type Y")
+    ax_y.set_ylabel("Reward")
 
+    ax_x.plot(mean_history_rewards["X"], color="red", label="Type X")
+    ax_x.set_title("Mean Rewards - Agent Type X")
+    ax_x.set_ylabel("Reward")
+    ax_x.set_xlabel("Episode")
+
+    plt.tight_layout()
+    plt.savefig("scenario1_average_rewards.png")
+    plt.close(fig2)
 
 
 if __name__ == "__main__":
