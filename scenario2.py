@@ -140,10 +140,7 @@ def simulate(total_episodes):
 
     # Init metrics
     # Init value tracking
-    q_table_values = dict()
-    q_table_values["Y1"] = [{1: 0.0, 2: 0.0}]
-    q_table_values["X1"] = [{1: 0.0, 2: 0.0}]
-    q_table_values["X3"] = [{1: 0.0, 2: 0.0}]
+    q_table_values = {"Y1": [], "X1": [], "X3": []}
     mean_history_rewards = {"X": [], "Y": []}
 
     agent_types = {
@@ -193,62 +190,68 @@ def simulate(total_episodes):
             # Link State -> Action -> Reward -> Next State
             agent.update_q_values(old_state, current_actions[name], rewards[name], new_state)
 
+        # Register rewards
+        x_rewards = [rewards[agent] for agent in rewards if "X" in agent]
+        y_rewards = [rewards[agent] for agent in rewards if "Y" in agent]
+        mean_history_rewards["X"].append(np.mean(x_rewards))
+        mean_history_rewards["Y"].append(np.mean(y_rewards))
+
+        # Register Q-values
+        for agent_name in q_table_values.keys():
+            # Fetch neighbors
+            ref_state = tuple(1 for _ in env.graph[agent_name])
+            state_q_vals = agents[agent_name]._get_q_values_for_state(ref_state)
+            q_table_values[agent_name].append(dict(state_q_vals))
+
+        # Current actions become previous
+        prev_actions = current_actions.copy()
+
         # Decay epsilon
         if (episode > 0) and (episode % 40 == 0):
             for agent in agents.values():
                 agent.decay_epsilon()
 
-        # Calc rewards
-        episode_X_rewards = [rewards[agent] for agent in rewards if "X" in agent]
-        episode_Y_rewards = [rewards[agent] for agent in rewards if "Y" in agent]
-        mean_history_rewards["X"].append(np.mean(episode_X_rewards))
-        mean_history_rewards["Y"].append(np.mean(episode_Y_rewards))
-
-        # Accmulate value metrics
-        q_table_values["Y1"].append(dict(agents["Y1"].q_table))
-        q_table_values["X1"].append(dict(agents["X1"].q_table))
-        q_table_values["X3"].append(dict(agents["X3"].q_table))
-
     # Plot q-values for Y1,X1,X3
     # For each agent, we need 2 datapoints for the actions
-
     # Y1
-    # y1_action1_values = [entry[1] for entry in q_table_values["Y1"]]
-    # y1_action2_values = [entry[2] for entry in q_table_values["Y1"]]
+    y1_a1 = [entry[1] for entry in q_table_values["Y1"]]
+    y1_a2 = [entry[2] for entry in q_table_values["Y1"]]
 
     #X1
-    # x1_action1_values = [entry[1] for entry in q_table_values["X1"]]
-    # x1_action2_values = [entry[2] for entry in q_table_values["X1"]]
+    x1_a1 = [entry[1] for entry in q_table_values["X1"]]
+    x1_a2 = [entry[2] for entry in q_table_values["X1"]]
 
     #X3
-    # x3_action1_values = [entry[1] for entry in q_table_values["X3"]]
-    # x3_action2_values = [entry[2] for entry in q_table_values["X3"]]
+    x3_a1 = [entry[1] for entry in q_table_values["X3"]]
+    x3_a2 = [entry[2] for entry in q_table_values["X3"]]
 
-    # Plotting - action values
-    # fig1, axs1 = plt.subplots(3, 1, sharex=True)
-    # axs1[0].plot(range(len(y1_action1_values)), y1_action1_values, label="Y1 Action1", linestyle="solid")
-    # axs1[0].plot(range(len(y1_action2_values)), y1_action2_values, label="Y1 Action2", linestyle="dotted")
-    # # axs[0].set(xlabel="Episode")
-    # axs1[0].legend(loc='best')
-    # axs1[0].set(ylabel="Q-Values")
-    # axs1[0].set_title("Y1 Action values")
-    #
-    # axs1[1].plot(range(len(x1_action1_values)), x1_action1_values, label="X1 Action1", linestyle="dashed")
-    # axs1[1].plot(range(len(y1_action2_values)), x1_action2_values, label="X1 Action2", linestyle="dashdot")
-    # # axs[1].set(xlabel="Episode")
-    # axs1[1].legend(loc='best')
-    # axs1[1].set(ylabel="Q-Values")
-    # axs1[1].set_title("X1 Action values")
-    #
-    # axs1[2].plot(range(len(x3_action1_values)), x3_action1_values, label="X3 Action1")
-    # axs1[2].plot(range(len(x3_action2_values)), x3_action2_values, label="X3 Action2", linestyle="-")
-    # axs1[2].set(xlabel="Episode")
-    # axs1[2].legend(loc='best')
-    # axs1[2].set(ylabel="Q-Values")
-    # axs1[2].set_title("X3 Action values")
-    #
-    # plt.savefig("scenario1_action_values.png")
-    # plt.close(fig1)
+    fig1, axs1 = plt.subplots(3, 1, figsize=(10, 12), sharex=True)
+
+    # Y1 Plot
+    axs1[0].plot(y1_a1, label="Action 1")
+    axs1[0].plot(y1_a2, label="Action 2", linestyle="--")
+    axs1[0].set_title("Y1 Action Values")
+    axs1[0].set(ylabel="Q-Values")
+    axs1[0].legend()
+
+    # X1 Plot
+    axs1[1].plot(x1_a1, label="Action 1")
+    axs1[1].plot(x1_a2, label="Action 2", linestyle="--")
+    axs1[1].set_title("X1 Action Values")
+    axs1[1].set(ylabel="Q-Values")
+    axs1[1].legend()
+
+    # X3 Plot
+    axs1[2].plot(x3_a1, label="Action 1")
+    axs1[2].plot(x3_a2, label="Action 2", linestyle="--")
+    axs1[2].set_title("X3 Action Values")
+    axs1[2].set_xlabel("Episode")
+    axs1[2].set(ylabel="Q-Values")
+    axs1[2].legend()
+
+    plt.tight_layout()
+    plt.savefig("scenario2_action_values.png")
+
     #
     # # Plotting - mean rewards for 2 agent types
     # fig2, (ax_y, ax_x) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
